@@ -5,17 +5,17 @@
 
   <message>
    <source>Hello world</source>
-   <translation type="unfinished"></translation>
+   <translation>Bonjour tout le monde</translation>
   </message>
 
   <message>
    <source>Open file</source>
-   <translation type="unfinished"></translation>
+   <translation>Ouvrir le fichier</translation>
   </message>
 
   <message>
    <source>Close file</source>
-   <translation type="unfinished"></translation>
+   <translation>Fermer le fichier</translation>
   </message>
 
  </context>
