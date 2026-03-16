@@ -10,7 +10,7 @@
 
   <message>
    <source>Open file</source>
-   <translation>Ouvrir le fichier</translation>
+   <translation type="unfinished">Ouvrir</translation>
   </message>
 
   <message>
