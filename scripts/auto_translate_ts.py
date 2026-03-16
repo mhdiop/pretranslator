@@ -1,5 +1,6 @@
 import os
 import json
+import re
 import requests
 import subprocess
 from lxml import etree
@@ -8,6 +9,8 @@ DEEPL_API_KEY = os.environ["DEEPL_API_KEY"]
 DEEPL_URL = "https://api-free.deepl.com/v2/translate"
 
 CACHE_FILE = "scripts/translation_cache.json"
+
+PLACEHOLDER_PATTERN = r"%\d+|%L\d+|%n"
 
 
 def load_cache():
@@ -22,21 +25,54 @@ def save_cache(cache):
         json.dump(cache, f, indent=2, ensure_ascii=False)
 
 
-def translate(text, target_lang):
+def protect_placeholders(text):
+
+    placeholders = re.findall(PLACEHOLDER_PATTERN, text)
+
+    mapping = {}
+
+    protected = text
+
+    for i, ph in enumerate(placeholders):
+
+        token = f"__PH_{i}__"
+
+        protected = protected.replace(ph, token)
+
+        mapping[token] = ph
+
+    return protected, mapping
+
+
+def restore_placeholders(text, mapping):
+
+    restored = text
+
+    for token, ph in mapping.items():
+        restored = restored.replace(token, ph)
+
+    return restored
+
+
+def batch_translate(texts, target_lang):
 
     headers = {
         "Authorization": f"DeepL-Auth-Key {DEEPL_API_KEY}"
     }
 
     payload = {
-        "text": text,
-        "target_lang": target_lang
+        "auth_key": DEEPL_API_KEY,
+        "target_lang": target_lang,
     }
 
+    for t in texts:
+        payload.setdefault("text", []).append(t)
+
     r = requests.post(DEEPL_URL, data=payload, headers=headers)
+
     r.raise_for_status()
 
-    return r.json()["translations"][0]["text"]
+    return [t["text"] for t in r.json()["translations"]]
 
 
 def get_modified_ts_files():
@@ -52,7 +88,7 @@ def get_modified_ts_files():
 
 def process_file(path, cache):
 
-    parser = etree.XMLParser(remove_blank_text=False)
+    parser = etree.XMLParser(remove_blank_text=True)
 
     tree = etree.parse(path, parser)
 
@@ -60,7 +96,11 @@ def process_file(path, cache):
 
     lang = root.attrib.get("language", "EN").upper()
 
-    changed = False
+    print("Processing:", path, "→", lang)
+
+    messages = []
+    texts = []
+    mappings = []
 
     for message in root.findall(".//message"):
 
@@ -75,32 +115,49 @@ def process_file(path, cache):
 
         source_text = source.text.strip()
 
-        if source_text in cache:
-            translated = cache[source_text]
+        key = f"{source_text}:{lang}"
 
-        else:
+        if key in cache:
 
-            translated = translate(source_text, lang)
+            translation.text = cache[key]
+            translation.attrib.pop("type", None)
 
-            cache[source_text] = translated
+            print(source_text, "→", cache[key], "(cached)")
 
-        translation.text = translated
+            continue
+
+        protected, mapping = protect_placeholders(source_text)
+
+        messages.append((message, source_text))
+        texts.append(protected)
+        mappings.append(mapping)
+
+    if not texts:
+        return False
+
+    translated_batch = batch_translate(texts, lang)
+
+    for (message, source_text), translated, mapping in zip(messages, translated_batch, mappings):
+
+        restored = restore_placeholders(translated, mapping)
+
+        translation = message.find("translation")
+
+        translation.text = restored
         translation.attrib.pop("type", None)
 
-        print(f"{source_text} -> {translated}")
+        cache[f"{source_text}:{lang}"] = restored
 
-        changed = True
+        print(source_text, "→", restored)
 
-    if changed:
+    tree.write(
+        path,
+        encoding="utf-8",
+        xml_declaration=True,
+        pretty_print=True
+    )
 
-        tree.write(
-            path,
-            encoding="utf-8",
-            xml_declaration=True,
-            pretty_print=True
-        )
-
-    return changed
+    return True
 
 
 def main():
@@ -120,6 +177,8 @@ def main():
 
     if modified:
         print("Translations updated")
+    else:
+        print("No translations needed")
 
 
 if __name__ == "__main__":

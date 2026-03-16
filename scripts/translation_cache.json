@@ -1,5 +1,6 @@
 {
-  "Hello world": "Bonjour tout le monde",
-  "Open file": "Ouvrir le fichier",
-  "Close file": "Fermer le fichier"
+  "Hello world:FR": "Bonjour tout le monde",
+  "Open file:FR": "Ouvrir le fichier",
+  "Close file:FR": "Fermer le fichier",
+  "File:FR": "Fichier"
 }
