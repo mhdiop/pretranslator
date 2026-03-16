@@ -8,54 +8,41 @@ on:
 jobs:
   translate:
 
-    # évite la boucle infinie quand le bot commit
-    if: github.actor != 'github-actions[bot]'
+    if: github.actor != 'translation-bot'
 
     runs-on: ubuntu-latest
 
     permissions:
       contents: write
-      pull-requests: write
 
     steps:
 
-      - name: Checkout repository
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 2
 
-      - name: Setup Python
-        uses: actions/setup-python@v5
+      - uses: actions/setup-python@v5
         with:
           python-version: "3.11"
 
-      - name: Install dependencies
-        run: |
-          pip install -r requirements.txt
+      - run: pip install -r requirements.txt
 
       - name: Run translation script
         env:
           DEEPL_API_KEY: ${{ secrets.DEEPL_API_KEY }}
+        run: python scripts/auto_translate_ts.py
+
+      - name: Commit translations
         run: |
-          python scripts/auto_translate_ts.py
 
-      - name: Create Pull Request with translations
-        uses: peter-evans/create-pull-request@v6
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
+          git config user.name "translation-bot"
+          git config user.email "bot@github.com"
 
-          branch: translation-bot
-          base: main
+          if git diff --quiet; then
+            echo "No changes"
+            exit 0
+          fi
 
-          commit-message: "Automatic translations using DeepL"
-          title: "Automatic translation update"
-          body: |
-            Automatic translations generated through DeepL Free API.
-
-            Please review before merging.
-
-          labels: |
-            translations
-            automated
-
-          delete-branch: true
+          git add .
+          git commit -m "Automatic translations using DeepL"
+          git push
