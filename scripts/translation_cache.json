@@ -1,1 +1,5 @@
-{}
+{
+  "Hello world": "Bonjour tout le monde",
+  "Open file": "Ouvrir le fichier",
+  "Close file": "Fermer le fichier"
+}
