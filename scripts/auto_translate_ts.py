@@ -88,7 +88,7 @@ def get_modified_ts_files():
 
 def process_file(path, cache):
 
-    parser = etree.XMLParser(remove_blank_text=True)
+    parser = etree.XMLParser(remove_blank_text=False)
 
     tree = etree.parse(path, parser)
 
@@ -101,6 +101,7 @@ def process_file(path, cache):
     messages = []
     texts = []
     mappings = []
+    file_changed = False
 
     for message in root.findall(".//message"):
 
@@ -122,6 +123,8 @@ def process_file(path, cache):
             translation.text = cache[key]
             translation.attrib.pop("type", None)
 
+            file_changed = True
+
             print(source_text, "→", cache[key], "(cached)")
 
             continue
@@ -132,23 +135,27 @@ def process_file(path, cache):
         texts.append(protected)
         mappings.append(mapping)
 
-    if not texts:
+    if texts:
+
+        translated_batch = batch_translate(texts, lang)
+
+        for (message, source_text), translated, mapping in zip(messages, translated_batch, mappings):
+
+            restored = restore_placeholders(translated, mapping)
+
+            translation = message.find("translation")
+
+            translation.text = restored
+            translation.attrib.pop("type", None)
+
+            cache[f"{source_text}:{lang}"] = restored
+
+            file_changed = True
+
+            print(source_text, "→", restored)
+
+    if not file_changed:
         return False
-
-    translated_batch = batch_translate(texts, lang)
-
-    for (message, source_text), translated, mapping in zip(messages, translated_batch, mappings):
-
-        restored = restore_placeholders(translated, mapping)
-
-        translation = message.find("translation")
-
-        translation.text = restored
-        translation.attrib.pop("type", None)
-
-        cache[f"{source_text}:{lang}"] = restored
-
-        print(source_text, "→", restored)
 
     tree.write(
         path,
