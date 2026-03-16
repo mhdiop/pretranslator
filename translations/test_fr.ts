@@ -13,5 +13,10 @@
    <translation type="unfinished"></translation>
   </message>
 
+  <message>
+   <source>Close file</source>
+   <translation type="unfinished"></translation>
+  </message>
+
  </context>
 </TS>
