@@ -2,5 +2,9 @@
   "Hello world:FR": "Bonjour tout le monde",
   "Open file:FR": "Ouvrir le fichier",
   "Close file:FR": "Fermer le fichier",
-  "File:FR": "Fichier"
+  "File:FR": "Fichier",
+  "Hello world:ES": "Hola, mundo",
+  "Open file:ES": "Abrir archivo",
+  "Close file:ES": "Cerrar archivo",
+  "File:ES": "Archivo"
 }

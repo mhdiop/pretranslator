@@ -10,17 +10,17 @@
 
   <message>
    <source>Open file</source>
-   <translation type="unfinished">Ouvrir</translation>
+   <translation>Ouvrir le fichier</translation>
   </message>
 
   <message>
    <source>Close file</source>
-   <translation type="unfinished"></translation>
+   <translation>Fermer le fichier</translation>
   </message>
 
   <message>
    <source>File</source>
-   <translation type="unfinished"></translation>
+   <translation>Fichier</translation>
   </message>
 
  </context>
