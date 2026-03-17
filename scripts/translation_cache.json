@@ -6,5 +6,10 @@
   "Hello world:ES": "Hola, mundo",
   "Open file:ES": "Abrir archivo",
   "Close file:ES": "Cerrar archivo",
-  "File:ES": "Archivo"
+  "File:ES": "Archivo",
+  "Hello world:AR": "مرحباً بالعالم",
+  "Open file:AR": "فتح الملف",
+  "Close file:AR": "إغلاق الملف",
+  "File:AR": "ملف",
+  "Save:FR": "Enregistrer"
 }

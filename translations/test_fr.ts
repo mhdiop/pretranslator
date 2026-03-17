@@ -25,7 +25,7 @@
 
   <message>
    <source>Save</source>
-   <translation type="unfinished"></translation>
+   <translation>Enregistrer</translation>
   </message>
 
  </context>

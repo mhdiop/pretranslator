@@ -5,22 +5,22 @@
 
   <message>
    <source>Hello world</source>
-   <translation type="unfinished"></translation>
+   <translation>مرحباً بالعالم</translation>
   </message>
 
   <message>
    <source>Open file</source>
-   <translation type="unfinished"></translation>
+   <translation>فتح الملف</translation>
   </message>
 
   <message>
    <source>Close file</source>
-   <translation type="unfinished"></translation>
+   <translation>إغلاق الملف</translation>
   </message>
 
   <message>
    <source>File</source>
-   <translation type="unfinished"></translation>
+   <translation>ملف</translation>
   </message>
 
  </context>
