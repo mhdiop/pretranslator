@@ -1,30 +1,25 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<TS version="2.1" language="FR">
+<TS version="2.1" language="AR">
  <context>
   <name>MainWindow</name>
 
   <message>
    <source>Hello world</source>
-   <translation>Bonjour tout le monde</translation>
+   <translation type="unfinished"></translation>
   </message>
 
   <message>
    <source>Open file</source>
-   <translation>Ouvrir le fichier</translation>
+   <translation type="unfinished"></translation>
   </message>
 
   <message>
    <source>Close file</source>
-   <translation>Fermer le fichier</translation>
+   <translation type="unfinished"></translation>
   </message>
 
   <message>
    <source>File</source>
-   <translation>Fichier</translation>
-  </message>
-
-  <message>
-   <source>Save</source>
    <translation type="unfinished"></translation>
   </message>
 
