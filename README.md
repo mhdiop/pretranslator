@@ -1,3 +1,5 @@
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.19516898.svg)](https://doi.org/10.5281/zenodo.19516898)
 
-# pretranslator
+# SlicerAITranslation Prototype
+
+The SlicerAITranslation Prototype is a proof-of-concept framework exploring the integration of AI-based translation into the 3D Slicer internationalization workflow. It leverages GitHub Actions to detect changes in Qt .ts translation files, identify untranslated strings, and generate draft translations using the DeepL API. In its current form, the prototype automatically commits the updated translation files back to the repository. It preserves formatting, placeholders, and XML structure to maintain compatibility with existing tooling while minimizing unnecessary diffs. While still experimental, this approach demonstrates the potential to reduce manual effort, accelerate the translation process, and improve multilingual coverage, and serves as a foundation for future integration of more advanced models such as SlicerLLM.
